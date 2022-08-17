@@ -24,9 +24,6 @@ if [ $EUID != 0 ]; then
    exit 1
 fi
 
-currently_deployed_ref=$(ostree admin status | grep -A2 "^*" | grep "origin refspec" | awk '{print $NF}')
-devmode_ref=$(head -n1 /etc/ostree-dev-mode.conf)
-
 if ! command -v ostree > /dev/null; then
   printf "ostree-dev-mode assumes ostree is installed\n"
   exit 2
@@ -36,6 +33,9 @@ if ! command -v rpm-ostree > /dev/null; then
   printf "ostree-dev-mode assumes rpm-ostree is installed\n"
   exit 3
 fi
+
+currently_deployed_ref=$(ostree admin status | grep -A2 "^*" | grep "origin refspec" | awk '{print $NF}')
+devmode_ref=$(head -n1 /etc/ostree-dev-mode.conf)
 
 if [ "$1" == "enable" ]; then
   if [ "$currently_deployed_ref" == "$devmode_ref" ]; then
