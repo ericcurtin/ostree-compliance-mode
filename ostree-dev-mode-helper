@@ -50,7 +50,7 @@ if [ "$1" == "enable" ]; then
 
      rpm-ostree cleanup -pr # cleanup everything except booted deployment
      ostree prune --refs-only # now finally prune the other refs
-     /bin/bash # grant root access at this point
+     exec /bin/bash # grant root access at this point
   else
      printf "Enabling ostree-dev-mode will leave the vehicle in an undrivable state removing proprietary data, this will also force a reboot\n"
      confirm_continuation
