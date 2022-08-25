@@ -4,7 +4,7 @@ set -e
 
 print_help() {
   printf "%s\n%s\n" "Usage:" \
-                    "  ostree-dev-mode-helper enable"
+                    "  ostree-compliance-mode-helper enable"
   exit 0
 }
 
@@ -31,12 +31,12 @@ if [ $EUID != 0 ]; then
 fi
 
 if ! command -v ostree > /dev/null; then
-  printf "ostree-dev-mode assumes ostree is installed\n"
+  printf "ostree-compliance-mode assumes ostree is installed\n"
   exit 2
 fi
 
 if ! command -v rpm-ostree > /dev/null; then
-  printf "ostree-dev-mode assumes rpm-ostree is installed\n"
+  printf "ostree-compliance-mode assumes rpm-ostree is installed\n"
   exit 3
 fi
 
@@ -46,17 +46,17 @@ if [ $(rpm-ostree status --json | grep -i -m1 "\"booted\""  | awk '{printf $3}')
 fi
 
 currently_deployed_ref=$(rpm-ostree status --json | grep -i -m1 "\"origin\"" | awk -F'"' '{print $4}')
-devmode_ref=$(head -n1 /etc/ostree-dev-mode.conf)
+devmode_ref=$(head -n1 /etc/ostree-compliance-mode.conf)
 
 if [ "$currently_deployed_ref" != "$devmode_ref" ]; then # 1st iteration
-  printf "Enabling ostree-dev-mode will leave the vehicle in an undrivable state removing proprietary data, this will also force a reboot\n"
+  printf "Enabling ostree-compliance-mode will leave the vehicle in an undrivable state removing proprietary data, this will also force a reboot\n"
   confirm_continuation
   ostree admin deploy $devmode_ref
   reboot
 else # 2nd iteration
-  printf "Enabling ostree-dev-mode will leave the vehicle in an undrivable state removing proprietary data\n"
+  printf "Enabling ostree-compliance-mode will leave the vehicle in an undrivable state removing proprietary data\n"
   confirm_continuation
-  # delete all refs except for the dev-mode one and special ostree ones
+  # delete all refs except for the compliance-mode one and special ostree ones
   for i in $(ostree refs); do
     if [ "$i" != "^ostree" ] && [ "$i" != "$devmode_ref" ]; then
       ostree refs --delete $i

@@ -35,7 +35,7 @@ int main(const int argc, const char* argv[]) {
     return errno;
   }
 
-  static const char* file = PREFIX "/libexec/ostree-dev-mode-helper";
+  static const char* file = PREFIX "/libexec/ostree-compliance-mode-helper";
   if (execl(file, file, "enable", (char*)NULL) < 0) {
     printf("execl failed, errno: %d\n", errno);
     return errno;
