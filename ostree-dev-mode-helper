@@ -7,16 +7,16 @@ print_help() {
 }
 
 confirm_continuation() {
-    while true; do
-      read -p "Are you sure you want to proceed? (yes/no) " yn
+  while true; do
+    read -p "Are you sure you want to proceed? (yes/no) " yn
 
-      case $yn in
-	yes ) break;;
-	no ) printf "exiting...\n";
-		exit;;
-	* ) printf "invalid response\n";;
-      esac
-    done
+    case $yn in
+      yes ) break;;
+      no ) printf "exiting...\n";
+           exit;;
+      * ) printf "invalid response\n";;
+    esac
+  done
 }
 
 if [ $EUID != 0 ]; then
@@ -38,24 +38,24 @@ currently_deployed_ref=$(ostree admin status | grep -A2 "^*" | grep "origin refs
 devmode_ref=$(head -n1 /etc/ostree-dev-mode.conf)
 
 if [ "$1" == "enable" ]; then
-  if [ "$currently_deployed_ref" == "$devmode_ref" ]; then
-     printf "Enabling ostree-dev-mode will leave the vehicle in an undrivable state removing proprietary data\n"
-     confirm_continuation
-     # delete all refs except for the dev-mode one and special ostree ones
-     for i in $(ostree refs); do
-        if [ "$i" != "^ostree" ] && [ "$i" != "$devmode_ref" ]; then
-          ostree refs --delete $i
-        fi
-     done
+  if [ "$currently_deployed_ref" != "$devmode_ref" ]; then # 1st iteration
+    printf "Enabling ostree-dev-mode will leave the vehicle in an undrivable state removing proprietary data, this will also force a reboot\n"
+    confirm_continuation
+    ostree admin deploy $devmode_ref
+    reboot
+  else # 2nd iteration
+    printf "Enabling ostree-dev-mode will leave the vehicle in an undrivable state removing proprietary data\n"
+    confirm_continuation
+    # delete all refs except for the dev-mode one and special ostree ones
+    for i in $(ostree refs); do
+      if [ "$i" != "^ostree" ] && [ "$i" != "$devmode_ref" ]; then
+        ostree refs --delete $i
+      fi
+    done
 
-     rpm-ostree cleanup -pr # cleanup everything except booted deployment
-     ostree prune --refs-only # now finally prune the other refs
-     exec /bin/bash # grant root access at this point
-  else
-     printf "Enabling ostree-dev-mode will leave the vehicle in an undrivable state removing proprietary data, this will also force a reboot\n"
-     confirm_continuation
-     ostree admin deploy $devmode_ref
-     reboot
+    rpm-ostree cleanup -pr # cleanup everything except booted deployment
+    ostree prune --refs-only # now finally prune the other refs
+    exec /bin/bash # grant root access at this point
   fi
 else
   print_help
