@@ -40,12 +40,15 @@ if ! command -v rpm-ostree > /dev/null; then
   exit 3
 fi
 
-if [ $(rpm-ostree status --json | python -c 'import json,sys; print(json.load(sys.stdin)["deployments"][0]["booted"])') != "True" ]; then
-  printf "First deployment in 'rpm-ostree status --json', should always be true\n"
-  exit 4
-fi
+num_of_deployments=$(rpm-ostree status --json | python -c 'import json,sys; print(len(json.load(sys.stdin)["deployments"]))')
 
-currently_deployed_ref=$(rpm-ostree status --json | python -c 'import json,sys; print(json.load(sys.stdin)["deployments"][0]["origin"])')
+for (( i = 0; i < $num_of_deployments; ++i )); do
+  if [ $(rpm-ostree status --json | python -c "import json,sys; print(json.load(sys.stdin)[\"deployments\"][$i][\"booted\"])") == "True" ]; then
+    break;
+  fi
+done
+
+currently_deployed_ref=$(rpm-ostree status --json | python -c "import json,sys; print(json.load(sys.stdin)[\"deployments\"][$i][\"origin\"])")
 devmode_ref=$(head -n1 /etc/ostree-compliance-mode.conf)
 
 if [ "$currently_deployed_ref" != "$devmode_ref" ]; then # 1st iteration
