@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 static void print_help() {
-  printf("Usage:\n");
+  printf("%s\n%s\n", "Usage:", "  ostree-compliance-mode enable");
 }
 
 int main(const int argc, const char* argv[]) {
