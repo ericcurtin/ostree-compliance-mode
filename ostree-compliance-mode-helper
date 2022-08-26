@@ -30,12 +30,12 @@ if [ $EUID != 0 ]; then
 fi
 
 if ! command -v ostree > /dev/null; then
-  printf "ostree-compliance-mode assumes ostree is installed\n"
+  printf "ostree is not installed\n"
   exit 2
 fi
 
 if ! command -v rpm-ostree > /dev/null; then
-  printf "ostree-compliance-mode assumes rpm-ostree is installed\n"
+  printf "rpm-ostree is not installed\n"
   exit 3
 fi
 
@@ -46,6 +46,11 @@ for (( i = 0; i < $num_of_deployments; ++i )); do
     break;
   fi
 done
+
+if [ "$i" -ge "$num_of_deployments" ]; then
+  printf "no booted deployment found"
+  exit 4
+fi
 
 currently_deployed_ref=$(rpm-ostree status --json | python -c "import json,sys; print(json.load(sys.stdin)[\"deployments\"][$i][\"origin\"])")
 compliance_mode_ref=$(head -n1 /etc/ostree-compliance-mode.conf)
