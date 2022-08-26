@@ -49,19 +49,19 @@ for (( i = 0; i < $num_of_deployments; ++i )); do
 done
 
 currently_deployed_ref=$(rpm-ostree status --json | python -c "import json,sys; print(json.load(sys.stdin)[\"deployments\"][$i][\"origin\"])")
-devmode_ref=$(head -n1 /etc/ostree-compliance-mode.conf)
+compliance_mode_ref=$(head -n1 /etc/ostree-compliance-mode.conf)
 
-if [ "$currently_deployed_ref" != "$devmode_ref" ]; then # 1st iteration
+if [ "$currently_deployed_ref" != "$compliance_mode_ref" ]; then # 1st iteration
   printf "Enabling ostree-compliance-mode will leave the vehicle in an undrivable state removing proprietary data, this will also force a reboot\n"
   confirm_continuation
-  ostree admin deploy $devmode_ref
+  ostree admin deploy $compliance_mode_ref
   reboot
 else # 2nd iteration
   printf "Enabling ostree-compliance-mode will leave the vehicle in an undrivable state removing proprietary data\n"
   confirm_continuation
   # delete all refs except for the compliance-mode one and special ostree ones
   for i in $(ostree refs); do
-    if [ "$i" != "^ostree" ] && [ "$i" != "$devmode_ref" ]; then
+    if [ "$i" != "^ostree" ] && [ "$i" != "$compliance_mode_ref" ]; then
       ostree refs --delete $i
     fi
   done
