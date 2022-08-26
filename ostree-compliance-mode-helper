@@ -3,9 +3,7 @@
 set -e
 
 print_help() {
-  printf "%s\n%s\n" "Usage:" \
-                    "  ostree-compliance-mode-helper enable"
-  exit 0
+  printf "%s\n%s\n" "Usage:" "  ostree-compliance-mode-helper enable"
 }
 
 confirm_continuation() {
@@ -23,6 +21,7 @@ confirm_continuation() {
 
 if [ "$1" != "enable" ]; then
   print_help
+  exit 0
 fi
 
 if [ $EUID != 0 ]; then
