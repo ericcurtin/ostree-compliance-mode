@@ -5,8 +5,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#define PREFIX "/var"
-
 static void print_help() {
   printf("Usage:\n");
 }

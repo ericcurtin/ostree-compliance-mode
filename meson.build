@@ -18,6 +18,7 @@ add_project_arguments(
   '-Wunused-function',
   '-Wno-unused-variable',
   '-Wno-implicit-function-declaration',
+  '-DPREFIX="'+get_option('prefix')+'"',
   language: 'c'
 )
 
