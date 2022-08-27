@@ -16,8 +16,6 @@ add_project_arguments(
   '-Wsign-compare',
   '-Wtype-limits',
   '-Wunused-function',
-  '-Wno-unused-variable',
-  '-Wno-implicit-function-declaration',
   '-DPREFIX="'+get_option('prefix')+'"',
   language: 'c'
 )

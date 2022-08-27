@@ -1,3 +1,7 @@
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE 1
+#endif
+
 #include <errno.h>
 #include <signal.h>
 #include <stdio.h>
@@ -27,7 +31,7 @@ int main(const int argc, const char* argv[]) {
   for (int i = 1; i < 65; ++i) {
     if (i != SIGKILL && i != SIGSTOP && i != SIGCHLD && i != 32 && i != 33) {
       if (sigaction(i, &act, NULL) < 0) {
-        PERR("sigaction(%d, %p, NULL)", i, &act);
+        PERR("sigaction(%d, %p, NULL)", i, (void*)&act);
         return errno;
       }
     }
@@ -38,8 +42,9 @@ int main(const int argc, const char* argv[]) {
     return 0;
   }
 
-  if (setuid(geteuid()) < 0) {
-    printf("setuid failed, errno: %d\n", errno);
+  const uid_t euid = geteuid();
+  if (setuid(euid) < 0) {
+    PERR("setuid(%d)", euid);
     return errno;
   }
 
