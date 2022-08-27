@@ -33,12 +33,7 @@ int main(const int argc, const char* argv[]) {
     }
   }
 
-  if (argc < 2) {
-    print_help();
-    return 0;
-  }
-
-  if (strncmp(argv[1], "enable", sizeof("enable"))) {
+  if (argc < 2 || strncmp(argv[1], "enable", sizeof("enable"))) {
     print_help();
     return 0;
   }
