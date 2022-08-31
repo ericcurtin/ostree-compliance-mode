@@ -13,12 +13,15 @@
 #define PREFIX "/usr"
 #endif
 
-#define PERR(...)                \
-  do {                           \
-    char* str;                   \
-    asprintf(&str, __VA_ARGS__); \
-    perror(str);                 \
-    free(str);                   \
+#define PERR(...)                          \
+  do {                                     \
+    char* str;                             \
+    if (asprintf(&str, __VA_ARGS__) < 0) { \
+      perror("");                          \
+    } else {                               \
+      perror(str);                         \
+      free(str);                           \
+    }                                      \
   } while (0)
 
 static void print_help() {
