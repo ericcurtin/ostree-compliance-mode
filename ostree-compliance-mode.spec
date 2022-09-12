@@ -1,38 +1,31 @@
-Name:           ostree-compliance-mode
-Version:        0.1
-Release:        1%{?dist}
-Summary:        ostree-compliance-mode is a tool designed to purge protected data, leaving the system in a modifyable state in compliance with GPLv3
+Name:          ostree-compliance-mode
+Version:       0.2
+Release:       1%{?dist}
+Summary:       Leaves the system in a modifiable state in compliance with GPLv3
 
-License:        GPLv2
-URL:            https://github.com/ericcurtin/%{name}
-Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+License:       GPLv2
+URL:           https://github.com/ericcurtin/%{name}
+Source0:       %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 
-BuildRequires: meson
 BuildRequires: gcc
 
 Requires:      ostree
 Requires:      rpm-ostree
 Requires:      python3
 
+
 %description
-%{summary}
+%{summary}.
 
 %prep
 %autosetup
-%global debug_package %{nil}
 
 %build
-%meson
-%meson_build
-
-%check
-%meson_test
+${CC} ${RPM_OPT_FLAGS} -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=gnu11 -Wstrict-aliasing -Wchar-subscripts -Wformat-security -Wmissing-declarations -Wpointer-arith -Wshadow -Wsign-compare -Wtype-limits -Wunused-function ostree-compliance-mode.c -o ostree-compliance-mode
 
 %install
-mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_libexecdir}
-install -m 4411 %{SOURCE0} %{buildroot}%{_bindir}/ostree-compliance-mode
-install -m 500 %{SOURCE0} %{buildroot}%{_libexecdir}/ostree-compliance-mode-helper
+install -Dm 4411 ostree-compliance-mode %{buildroot}%{_bindir}/ostree-compliance-mode
+install -Dm 500 %{SOURCE0} %{buildroot}%{_libexecdir}/ostree-compliance-mode-helper
 
 %files
 %license LICENSE
@@ -41,5 +34,5 @@ install -m 500 %{SOURCE0} %{buildroot}%{_libexecdir}/ostree-compliance-mode-help
 %{_libexecdir}/ostree-compliance-mode-helper
 
 %changelog
-* Fri Sep 9 2022 Ian Mullins <imullins@redhat.com> - 0.1-1
-- ostree-compliance-mode
+* Mon Sep 12 2022 Ian Mullins <imullins@redhat.com> - 0.2-1
+- Initial version
