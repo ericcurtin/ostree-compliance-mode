@@ -11,7 +11,7 @@ if [ $EUID != 0 ]; then
    exit 1
 fi
 
-meson build --buildtype=release --prefix=$PREFIX
+meson --reconfigure build --buildtype=release --prefix=$PREFIX
 ninja -v -C build
 ninja -v -C build install
 chmod 4011 $PREFIX/bin/ostree-compliance-mode
