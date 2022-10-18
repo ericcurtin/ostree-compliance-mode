@@ -1,6 +1,6 @@
 Name:          ostree-compliance-mode
 Version:       0.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Leaves the system in a modifiable state in compliance with GPLv3
 
 License:       GPLv2
@@ -12,6 +12,7 @@ BuildRequires: gcc
 Requires:      ostree
 Requires:      rpm-ostree
 Requires:      python
+
 
 %description
 %{summary}.
@@ -26,14 +27,19 @@ ${CC} ${RPM_OPT_FLAGS} -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=gnu11
 %install
 install -Dm 4411 ostree-compliance-mode %{buildroot}%{_bindir}/ostree-compliance-mode
 install -Dm 500 ostree-compliance-mode-helper %{buildroot}%{_libexecdir}/ostree-compliance-mode-helper
+install -Dm 600 <("") %{buildroot}%{_sysconfdir}/ostree-compliance-mode.conf
 
 %files
 %license LICENSE
 %doc README.md
 %{_bindir}/ostree-compliance-mode
 %{_libexecdir}/ostree-compliance-mode-helper
+%{_sysconfdir}/ostree-compliance-mode.conf
 
 %changelog
+* Thur Oct 20 2022 Ian Mullins <imullins@redhat.com> - 0.2-3
+- ostree-compliance-mode.conf file installation
+
 * Fri Oct 14 2022 Ian Mullins <imullins@redhat.com> - 0.2-2
 - Minor changes to install and build section to correctly install required files
 
