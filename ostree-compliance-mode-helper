@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright (C) 2022 Eric Curtin <ecurtin@redhat.com>
+#
+
 set -e
 
 print_help() {

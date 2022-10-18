@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-2.0
+ *
+ * Copyright (C) 2022 Eric Curtin <ecurtin@redhat.com>
+ */
+
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE 1
 #endif
